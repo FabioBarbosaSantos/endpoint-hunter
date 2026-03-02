@@ -13,13 +13,10 @@ from urllib.parse import urljoin
 from hunter.config import DEFAULT_HEADERS, TIMEOUT
 
 
-def get_html(url, verbose=False):
-    """
-    Faz requisição GET para o alvo e retorna o HTML.
-    """
+def get_html(url, verbose=False): #Faz requisição GET para o alvo e retorna o HTML.
 
     if verbose:
-        print(f"[DEBUG] Requesting HTML from: {url}")
+        print(f"Requesting HTML from: {url}")
 
     response = requests.get(url, headers=DEFAULT_HEADERS, timeout=TIMEOUT)
 
@@ -27,15 +24,12 @@ def get_html(url, verbose=False):
     response.raise_for_status()
 
     if verbose:
-        print(f"[DEBUG] Status code: {response.status_code}")
+        print(f"Status code: {response.status_code}")
 
     return response.text
 
 
-def extract_scripts(html, base_url, verbose=False):
-    """
-    Extrai todos os <script src="..."> do HTML.
-    """
+def extract_scripts(html, base_url, verbose=False): #Extrai todos os <script src="..."> do HTML.
 
     soup = BeautifulSoup(html, "html.parser")
     scripts = []
@@ -45,22 +39,19 @@ def extract_scripts(html, base_url, verbose=False):
         scripts.append(full_url)
 
         if verbose:
-            print(f"[DEBUG] Found JS file: {full_url}")
+            print(f"Found JS file: {full_url}")
 
     return list(set(scripts))
 
 
-def fetch_js_files(script_urls, verbose=False):
-    """
-    Baixa todos os arquivos JS encontrados.
-    """
+def fetch_js_files(script_urls, verbose=False): #Baixa todos os arquivos JS encontrados.
 
     js_contents = []
 
     for url in script_urls:
         try:
             if verbose:
-                print(f"[DEBUG] Fetching JS: {url}")
+                print(f"Fetching JS: {url}")
 
             response = requests.get(url, headers=DEFAULT_HEADERS, timeout=TIMEOUT)
 
@@ -68,10 +59,10 @@ def fetch_js_files(script_urls, verbose=False):
                 js_contents.append(response.text)
             else:
                 if verbose:
-                    print(f"[DEBUG] Skipped {url} (status {response.status_code})")
+                    print(f"Skipped {url} (status {response.status_code})")
 
         except requests.RequestException as e:
             if verbose:
-                print(f"[ERROR] Failed to fetch {url}: {e}")
+                print(f"Failed to fetch {url}: {e}")
 
     return js_contents
