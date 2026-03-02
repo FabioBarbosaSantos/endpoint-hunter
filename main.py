@@ -34,6 +34,7 @@ def main():
 
     # 2 - Extrair links do HTML
     html_links = extract_html_links(html, args.url, args.verbose)
+    print(f"[+] Found {len(html_links)} HTML links")
 
     # 3 - Extrair JS
     scripts = extract_scripts(html, args.url, args.verbose)
@@ -52,7 +53,7 @@ def main():
 
     print("\n[+] Valid endpoints (excluding 404):\n")
 
-    # 7 - Validar
+    # 7 - Validar (uma única vez)
     results = validate_endpoints(args.url, all_endpoints)
 
     for url, status in results:
