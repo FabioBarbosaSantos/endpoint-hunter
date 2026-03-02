@@ -12,6 +12,53 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 from hunter.config import DEFAULT_HEADERS, TIMEOUT
 
+def extract_html_links(html, base_url, verbose=False):
+    soup = BeautifulSoup(html, "html.parser")
+    links = set()
+
+    base_domain = urlparse(base_url).netloc
+
+    def is_valid_link(href):
+        if not href:
+            return False
+
+        # Ignorar âncoras
+        if href.startswith("#"):
+            return False
+
+        # Ignorar javascript:
+        if href.startswith("javascript:"):
+            return False
+
+        # Ignorar mailto:
+        if href.startswith("mailto:"):
+            return False
+
+        return True
+
+    tags_to_check = [
+        ("a", "href"),
+        ("form", "action"),
+        ("link", "href"),
+    ]
+
+    for tag_name, attr in tags_to_check:
+        for tag in soup.find_all(tag_name, **{attr: True}):
+            href = tag[attr]
+
+            if not is_valid_link(href):
+                continue
+
+            full_url = urljoin(base_url, href)
+
+            #Opcional: só manter links internos
+            if urlparse(full_url).netloc == base_domain:
+                links.add(full_url)
+
+    if verbose:
+        print(f"Found {len(links)} valid HTML links")
+
+    return list(links)
 
 def get_html(url, verbose=False): #Faz requisição GET para o alvo e retorna o HTML.
 
