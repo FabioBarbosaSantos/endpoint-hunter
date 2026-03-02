@@ -1,13 +1,16 @@
 """
 main.py
 
-Arquivo principal da ferramenta. Responsável por:
-- CLI
-- Fluxo principal
+Arquivo principal da ferramenta.
 """
 
 import argparse
-from hunter.crawler import get_html, extract_scripts, fetch_js_files
+from hunter.crawler import (
+    get_html,
+    extract_scripts,
+    fetch_js_files,
+    extract_html_links
+)
 from hunter.extractor import extract_endpoints
 from hunter.validator import validate_endpoints
 
@@ -29,21 +32,28 @@ def main():
     # 1 - Baixar HTML
     html = get_html(args.url, args.verbose)
 
-    # 2 - Extrair JS
+    # 2 - Extrair links do HTML
+    html_links = extract_html_links(html, args.url, args.verbose)
+
+    # 3 - Extrair JS
     scripts = extract_scripts(html, args.url, args.verbose)
     print(f"[+] Found {len(scripts)} JS files")
 
-    # 3 - Baixar JS
+    # 4 - Baixar JS
     js_contents = fetch_js_files(scripts, args.verbose)
 
-    # 4 - Extrair endpoints
+    # 5 - Extrair endpoints do JS
     endpoints = extract_endpoints(js_contents, args.url, args.verbose)
-    print(f"[+] Found {len(endpoints)} endpoints")
+    print(f"[+] Found {len(endpoints)} JS endpoints")
+
+    # 6 - Unir tudo
+    all_endpoints = set(endpoints) | set(html_links)
+    print(f"[+] Total unique endpoints: {len(all_endpoints)}")
 
     print("\n[+] Valid endpoints (excluding 404):\n")
 
-    # 5 - Validar endpoints
-    results = validate_endpoints(args.url, endpoints)
+    # 7 - Validar
+    results = validate_endpoints(args.url, all_endpoints)
 
     for url, status in results:
         print(f"[{status}] {url}")
