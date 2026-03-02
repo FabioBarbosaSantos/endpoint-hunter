@@ -9,6 +9,7 @@ Arquivo principal da ferramenta. Responsável por:
 import argparse
 from hunter.crawler import get_html, extract_scripts, fetch_js_files
 from hunter.extractor import extract_endpoints
+from hunter.validator import validate_endpoints
 
 
 def main():
@@ -30,7 +31,6 @@ def main():
 
     # 2 - Extrair JS
     scripts = extract_scripts(html, args.url, args.verbose)
-
     print(f"[+] Found {len(scripts)} JS files")
 
     # 3 - Baixar JS
@@ -38,11 +38,15 @@ def main():
 
     # 4 - Extrair endpoints
     endpoints = extract_endpoints(js_contents, args.url, args.verbose)
+    print(f"[+] Found {len(endpoints)} endpoints")
 
-    print("\n[+] Endpoints found:\n")
+    print("\n[+] Valid endpoints (excluding 404):\n")
 
-    for ep in endpoints:
-        print(ep)
+    # 5 - Validar endpoints
+    results = validate_endpoints(args.url, endpoints)
+
+    for url, status in results:
+        print(f"[{status}] {url}")
 
 
 if __name__ == "__main__":
