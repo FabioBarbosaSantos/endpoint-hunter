@@ -9,7 +9,7 @@ Responsável por:
 
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 from hunter.config import DEFAULT_HEADERS, TIMEOUT
 
 def extract_html_links(html, base_url, verbose=False):
