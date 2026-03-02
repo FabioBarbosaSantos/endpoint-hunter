@@ -11,6 +11,10 @@ git clone https://github.com/FabioBarbosaSantos/endpoint-hunter.git
 cd endpoint-hunter
 pip install -r requirements.txt
 ```
+or
+```bash
+pip install --break-system-packages -r requirements.txt
+```
 
 Run the tool:
 
