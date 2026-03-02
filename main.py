@@ -1,8 +1,7 @@
 """
 main.py
 
-Arquivo principal da ferramenta.
-Responsável por:
+Arquivo principal da ferramenta. Responsável por:
 - CLI
 - Fluxo principal
 """
