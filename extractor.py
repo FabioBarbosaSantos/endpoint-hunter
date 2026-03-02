@@ -1,8 +1,7 @@
-"""
-extractor.py
+#extractor.py
 
-Responsável por extrair endpoints usando regex.
-"""
+#Responsável por extrair endpoints usando regex.
+
 
 import re
 from urllib.parse import urljoin
@@ -14,10 +13,7 @@ URL_REGEX = r'https?://[^\s"\']+'
 PATH_REGEX = r'\/[a-zA-Z0-9_\-\/]+'
 
 
-def extract_endpoints(js_contents, base_url, verbose=False):
-    """
-    Extrai endpoints de todos os conteúdos JS.
-    """
+def extract_endpoints(js_contents, base_url, verbose=False): #Extrai endpoints de todos os conteúdos JS.
 
     endpoints = set()
 
@@ -35,6 +31,6 @@ def extract_endpoints(js_contents, base_url, verbose=False):
             endpoints.add(full_path)
 
     if verbose:
-        print(f"[DEBUG] Total endpoints found: {len(endpoints)}")
+        print(f"Total endpoints found: {len(endpoints)}")
 
     return endpoints
